@@ -1,51 +1,35 @@
 require 'rails_helper'
 
-RSpec.describe StaticPagesController, type: :controller do
-  render_views
-
-  let(:base_title) { 'Ruby on Rails Tutorial Sample App' }
-
+RSpec.describe StaticPagesController, type: :request do
   describe "GET root" do
-    before do
-      visit root_path
-    end
-
     it "returns http success" do
+      get root_path
       expect(response).to have_http_status(:success)
-      expect(page).to have_title "#{base_title}"
-    end
-  end
-
-  describe "GET #home" do
-    it "returns http success" do
-      get :home
-      expect(response).to have_http_status(:success)
-      assert_select "title", "#{base_title}"
+      expect(response.body).to include full_title('')
     end
   end
 
   describe "GET #help" do
     it "returns http success" do
-      get :help
+      get help_path
       expect(response).to have_http_status(:success)
-      assert_select "title", "Help | #{base_title}"
+      expect(response.body).to include full_title('Help')
     end
   end
 
   describe "GET #about" do
     it "returns http success" do
-      get :about
+      get '/about'
       expect(response).to have_http_status(:success)
-      assert_select "title", "About | #{base_title}"
+      expect(response.body).to include full_title('About')
     end
   end
 
   describe "GET #contact" do
     it "returns http success" do
-      get :contact
+      get '/contact'
       expect(response).to have_http_status(:success)
-      assert_select "title", "Contact | #{base_title}"
-      # expect(response.body).to include full_title('Contact')
+      expect(response.body).to include full_title('Contact')
     end
   end
 end

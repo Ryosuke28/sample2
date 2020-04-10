@@ -15,7 +15,7 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 #capybaraを導入
-require 'capybara/rspec' # 追記
+require 'capybara/rspec' # 追記'
 
 RSpec.configure do |config|
   config.include Capybara::DSL # 追記
