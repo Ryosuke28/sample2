@@ -1,6 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe StaticPagesController, type: :request do
+RSpec.describe "StaticPages", type: :request do
+
   describe "GET root" do
     it "returns http success" do
       get root_path
@@ -9,7 +10,7 @@ RSpec.describe StaticPagesController, type: :request do
     end
   end
 
-  describe "GET #help" do
+  describe "GET /help" do
     it "returns http success" do
       get help_path
       expect(response).to have_http_status(:success)
@@ -17,7 +18,7 @@ RSpec.describe StaticPagesController, type: :request do
     end
   end
 
-  describe "GET #about" do
+  describe "GET /about" do
     it "returns http success" do
       get '/about'
       expect(response).to have_http_status(:success)
@@ -25,7 +26,7 @@ RSpec.describe StaticPagesController, type: :request do
     end
   end
 
-  describe "GET #contact" do
+  describe "GET /contact" do
     it "returns http success" do
       get '/contact'
       expect(response).to have_http_status(:success)
