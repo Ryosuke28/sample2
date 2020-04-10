@@ -15,10 +15,13 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 #capybaraを導入
-require 'capybara/rspec' # 追記
+require 'capybara/rspec' # 追記'
 
 RSpec.configure do |config|
   config.include Capybara::DSL # 追記
+  config.before(:each, type: :system) do #追記
+    driven_by :selenium_chrome_headless
+  end
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
