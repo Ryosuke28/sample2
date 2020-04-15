@@ -29,6 +29,10 @@ RSpec.describe "Sessions", type: :request do
         delete logout_path
         expect(response).to redirect_to root_path
         expect(is_logged_in?).not_to be_truthy
+        # タブを2つ開いていてそちらでもログアウトをクリックした場合
+        delete logout_path
+        expect(response).to redirect_to root_path
+        expect(is_logged_in?).not_to be_truthy
       end
     end
   end
