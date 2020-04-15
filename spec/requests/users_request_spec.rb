@@ -18,6 +18,8 @@ RSpec.describe "Users", type: :request do
         expect do
           post signup_path, params: { user: user_params }
         end.to change(User, :count).by(1)
+        expect(page).to redirect_to user_path(User.last)
+        expect(response).to have_http_status 302
       end
     end
 

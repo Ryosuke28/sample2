@@ -18,18 +18,18 @@ RSpec.describe "SignUps", type: :system do
       end
     end
 
-    # context "パラメータが揃っている場合" do
-    #   before do
-    #     visit signup_path
-    #     fill_in "Name", with: "Example User1"
-    #     fill_in "Email", with: "example1@example.com"
-    #     fill_in "Paassword", with: "password"
-    #     fill_in "Confirmation", with: "password"
-    #     click_button 'Create my account'
-    #   end
-    #   it "ユーザーが登録される" do
-    #     #
-    #   end
-    # end
+    context "パラメータが揃っている場合" do
+      before do
+        visit signup_path
+        fill_in "Name", with: "Example User1"
+        fill_in "Email", with: "example1@example.com"
+        fill_in "Password", with: "password"
+        fill_in "Confirmation", with: "password"
+        click_button 'Create my account'
+      end
+      it "ユーザーが登録される" do
+        expect(page).to have_selector('.alert-success', text: 'Welcome to the Sample App!')
+      end
+    end
   end
 end
