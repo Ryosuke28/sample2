@@ -40,4 +40,23 @@ RSpec.describe "Users", type: :request do
     end
   end
 
+  describe "GET /edit" do
+    before do
+      @user = FactoryBot.create(:user)
+      post login_path params: { 
+        session: {
+          email: @user.email,
+          password: @user.password,
+          remember_me: '1'
+          } }
+    end
+
+    it "returns http success" do
+      get edit_user_path(@user)
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include full_title('Edit user')
+    end
+    
+  end
+
 end
