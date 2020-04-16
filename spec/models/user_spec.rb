@@ -87,4 +87,10 @@ RSpec.describe User, type: :model do
       expect(@user).to be_invalid
     end
   end
+
+  describe 'authenticated?にnilを与えたとき' do
+    it 'falseを返す' do
+      expect(@user.authenticated?('')).not_to be_truthy
+    end
+  end
 end
