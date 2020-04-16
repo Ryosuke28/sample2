@@ -11,5 +11,26 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe SessionsHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe 'current_userメソッド' do
+    before do
+      @user = FactoryBot.create(:user)
+      remember(@user)
+    end
+
+    context 'session[:user_id]がないとき' do
+      it '正しいユーザーを返す' do
+        expect(current_user).to eq @user
+      end
+    end
+    
+    context 'remember_digestに違う値があるとき' do
+      it 'nilを返す' do
+        @user.update_attribute(:remember_digest, User.digest(User.new_token))
+        expect(current_user).to eq nil
+      end
+    end
+
+
+    
+  end
 end

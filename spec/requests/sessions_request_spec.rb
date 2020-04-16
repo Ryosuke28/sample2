@@ -35,6 +35,33 @@ RSpec.describe "Sessions", type: :request do
         expect(is_logged_in?).not_to be_truthy
       end
     end
+
+    context 'remember_meにチェックを付けた場合' do
+      before do
+        @user = FactoryBot.create(:user)
+      end
+      it 'cookieが保存される' do
+        post login_path params: { 
+          session: {
+            email: @user.email,
+            password: @user.password,
+            remember_me: '1'
+            } }
+        expect(response).to have_http_status 302
+        expect(response.cookies['remember_token']).not_to eq nil
+        delete logout_path
+        # remember_meのチェックを外した場合
+        post login_path params: { 
+          session: {
+            email: @user.email,
+            password: @user.password,
+            remember_me: '０'
+            } }
+        expect(response).to have_http_status 302
+        expect(response.cookies['remember_token']).to eq nil
+      end
+
+    end
   end
 
 end
