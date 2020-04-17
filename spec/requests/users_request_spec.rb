@@ -43,20 +43,52 @@ RSpec.describe "Users", type: :request do
   describe "GET /edit" do
     before do
       @user = FactoryBot.create(:user)
-      post login_path params: { 
-        session: {
-          email: @user.email,
-          password: @user.password,
-          remember_me: '1'
-          } }
+      @other_user = FactoryBot.create(:user, name: "Other User",
+                                             email: "otheruser@example.com" )
     end
 
     it "returns http success" do
+      log_in(@user)
       get edit_user_path(@user)
       expect(response).to have_http_status(:success)
       expect(response.body).to include full_title('Edit user')
     end
+
+    it 'ログインしていない状態ではアクセスできない' do
+      get edit_user_path(@user)
+      expect(response).to redirect_to login_path
+      expect(flash[:danger]).to be_truthy
+    end
+
+    it 'ログインしていない状態ではデータを変更できない' do
+      patch user_path(@user), params: { user: { name: @user.name, email: @user.email } }
+      expect(response).to redirect_to login_path
+      expect(flash[:danger]).to be_truthy
+    end
+
+    context '違うユーザーのデータにアクセスした場合' do
+      it 'editアクションはリダイレクトされる' do
+        log_in(@other_user)
+        get edit_user_path(@user)
+        expect(response).to redirect_to root_path
+      end
+
+      it 'updateアクションはリダイレクトされる' do
+        log_in(@other_user)
+        patch user_path(@user), params: { user: { name: @user.name, email: @user.email } }
+        expect(response).to redirect_to root_path
+      end
+    end
     
+  end
+
+  describe "GET /index" do
+    context 'ログインしていない場合' do
+      it 'ログインページへリダイレクトされる' do
+        get users_path
+        expect(response).to redirect_to login_path
+      end
+    end
   end
 
 end

@@ -5,6 +5,8 @@ RSpec.describe "UsersEdits", type: :system do
   describe 'ユーザー編集機能' do
     before do
       @user = FactoryBot.create(:user)
+      @other_user = FactoryBot.create(:user, name: "Other User",
+                                             email: "otheruser@example.com" )
       log_in_as(@user)
       click_link 'Account'
       click_link 'Setting'
@@ -40,5 +42,26 @@ RSpec.describe "UsersEdits", type: :system do
         expect(@user.reload.email).to eq "foo@bar.com"
       end
     end
+
+    context 'フレンドリーフォワーディングな操作が行われた場合' do
+      before do
+        click_link 'Account'
+        click_link 'Log out'
+        visit edit_user_path(@user)
+        log_in_as(@user)
+      end
+
+      it 'editページにリダイレクトされる' do
+        expect(current_path).to eq edit_user_path(@user)
+        click_link 'Account'
+        click_link 'Log out'
+        # フレンドリーフォワーディング操作が行われていない場合の動きのテスト
+        log_in_as(@user)
+        expect(current_path).to eq user_path(@user)
+      end
+    end
+
+
+
   end
 end

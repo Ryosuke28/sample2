@@ -31,7 +31,7 @@ RSpec.describe "UsersLogins", type: :system do
         expect(page).to have_link 'Account'
         click_link "Account"
         expect(page).to have_link 'Profile', href: user_path(@user)
-        expect(page).to have_link 'Setting', href: "#"
+        expect(page).to have_link 'Setting', href: edit_user_path(@user)
         expect(page).to have_link 'Log out', href: logout_path
       end
 

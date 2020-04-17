@@ -13,7 +13,7 @@ RSpec.describe "SignUps", type: :system do
       end
       it "エラーを表示する" do
         expect(page).to have_selector('#error_explanation')
-        expect(page).to have_selector('.alert-danger', text: 'The form contains 6 errors.')
+        expect(page).to have_selector('.alert-danger', text: 'The form contains 4 errors.')
         expect(page).to have_content("Name can't be blank")
       end
     end
