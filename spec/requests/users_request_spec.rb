@@ -79,6 +79,22 @@ RSpec.describe "Users", type: :request do
         expect(response).to redirect_to root_path
       end
     end
+
+    context 'ユーザーのadmin属性にアクセスした場合' do
+      it '管理者でなければ拒否される' do
+        log_in(@other_user)
+        expect(@other_user.admin?).not_to be_truthy
+        patch user_path(@other_user), params: {
+          user: {
+            password: @other_user.password,
+            password_confirmation: @other_user.password,
+            admin: true
+          }
+        }
+        expect(@other_user.reload.admin?).not_to be_truthy
+      end
+
+    end
     
   end
 
@@ -99,6 +115,40 @@ RSpec.describe "Users", type: :request do
       it 'ユーザーリストを表示する' do
         get users_path
         expect(response.body).to include full_title('All users')
+      end
+    end
+  end
+
+  describe 'ユーザー削除機能' do
+    before do
+      @user = FactoryBot.create(:user, admin: true)
+      @other_user = FactoryBot.create(:user, name: "Other User",
+                                             email: "otheruser@example.com" )
+    end
+
+    context 'ログインしていない場合' do
+      it 'ユーザーは削除されない' do
+        expect {
+          delete user_path(@other_user)
+        }.not_to change(User, :count)
+      end
+    end
+
+    context '管理者でないユーザーの場合' do
+      it 'ユーザーは削除されない' do
+        log_in(@other_user)
+        expect {
+          delete user_path(@other_user)
+        }.not_to change(User, :count)
+      end
+    end
+
+    context '管理者権限を持つユーザーの場合' do
+      it 'ユーザーを削除できる' do
+        log_in(@user)
+        expect {
+          delete user_path(@other_user)
+        }.to change(User, :count).by(-1)
       end
     end
   end
