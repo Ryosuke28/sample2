@@ -11,15 +11,30 @@ RSpec.describe "Users", type: :request do
   end
 
   describe "POST /create" do
+    include ActiveJob::TestHelper
+
     context 'パラメータが揃っている場合' do
       # 有効なユーザーデータの作成
       let(:user_params) { FactoryBot.attributes_for(:user) }
       it "ユーザーが登録される" do
-        expect do
+        expect {
           post signup_path, params: { user: user_params }
-        end.to change(User, :count).by(1)
-        expect(page).to redirect_to user_path(User.last)
-        expect(response).to have_http_status 302
+        }.to change(User, :count).by(1)
+        expect(response).to redirect_to root_path
+        user = assigns(:user) # controllerの@userインスタンスを取得してuserに代入
+        # 有効化していない状態でログインを試す
+        log_in(user)
+        expect(session[:user_id]).not_to be_truthy # ログイン出来ないことを確認
+        # 正しくない有効化トークンでアクセス
+        get edit_account_activation_path("invalid token", email: user.email)
+        expect(session[:user_id]).not_to be_truthy # ログイン出来ないことを確認
+        # 正しくないメールアドレスでアクセス
+        get edit_account_activation_path(user.activation_token, email: "worng@email.address")
+        expect(session[:user_id]).not_to be_truthy # ログイン出来ないことを確認
+        # 正しい組み合わせでアクセス
+        get edit_account_activation_path(user.activation_token, email: user.email)
+        expect(session[:user_id]).to eq user.id # ログイン出来たことを確認
+        expect(user.reload.activated?).to be_truthy
       end
     end
 
@@ -33,9 +48,9 @@ RSpec.describe "Users", type: :request do
                  password_confirmation: 'password')
       end
       it "ユーザーは登録されない" do
-        expect do
+        expect {
           post signup_path, params: { user: user_params }
-        end.to change(User, :count).by(0)
+        }.not_to change(User, :count)
       end
     end
   end

@@ -79,6 +79,8 @@ group :test do
   # rspecテストで削除するように書いてあった。代わりにwebdriversを入れる
   #gem 'chromedriver-helper'
   gem 'webdrivers'
+  # 追加
+  gem 'rails-controller-testing'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
