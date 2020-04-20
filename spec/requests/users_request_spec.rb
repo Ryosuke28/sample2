@@ -89,6 +89,18 @@ RSpec.describe "Users", type: :request do
         expect(response).to redirect_to login_path
       end
     end
+
+    context 'ログインしている場合' do
+      before do
+        @user = FactoryBot.create(:user)
+        log_in(@user)
+      end
+      
+      it 'ユーザーリストを表示する' do
+        get users_path
+        expect(response.body).to include full_title('All users')
+      end
+    end
   end
 
 end

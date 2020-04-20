@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe "UsersEdits", type: :system do
-  # pending "add some scenarios (or delete) #{__FILE__}"
   describe 'ユーザー編集機能' do
     before do
       @user = FactoryBot.create(:user)
