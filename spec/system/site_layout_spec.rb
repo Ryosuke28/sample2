@@ -5,7 +5,7 @@ RSpec.describe "SiteLayoutSpecs", type: :system do
     before do
       visit root_path
     end
-    subject { page }
+    
     it 'has links sach as root_path, help_path, and about_path' do
       expect(page).to have_link nil, href: root_path, count: 2
       expect(page).to have_link 'Help', href: help_path

@@ -40,4 +40,117 @@ RSpec.describe "Users", type: :request do
     end
   end
 
+  describe "GET /edit" do
+    before do
+      @user = FactoryBot.create(:user)
+      @other_user = FactoryBot.create(:user, name: "Other User",
+                                             email: "otheruser@example.com" )
+    end
+
+    it "returns http success" do
+      log_in(@user)
+      get edit_user_path(@user)
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include full_title('Edit user')
+    end
+
+    it 'ログインしていない状態ではアクセスできない' do
+      get edit_user_path(@user)
+      expect(response).to redirect_to login_path
+      expect(flash[:danger]).to be_truthy
+    end
+
+    it 'ログインしていない状態ではデータを変更できない' do
+      patch user_path(@user), params: { user: { name: @user.name, email: @user.email } }
+      expect(response).to redirect_to login_path
+      expect(flash[:danger]).to be_truthy
+    end
+
+    context '違うユーザーのデータにアクセスした場合' do
+      it 'editアクションはリダイレクトされる' do
+        log_in(@other_user)
+        get edit_user_path(@user)
+        expect(response).to redirect_to root_path
+      end
+
+      it 'updateアクションはリダイレクトされる' do
+        log_in(@other_user)
+        patch user_path(@user), params: { user: { name: @user.name, email: @user.email } }
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    context 'ユーザーのadmin属性にアクセスした場合' do
+      it '管理者でなければ拒否される' do
+        log_in(@other_user)
+        expect(@other_user.admin?).not_to be_truthy
+        patch user_path(@other_user), params: {
+          user: {
+            password: @other_user.password,
+            password_confirmation: @other_user.password,
+            admin: true
+          }
+        }
+        expect(@other_user.reload.admin?).not_to be_truthy
+      end
+
+    end
+    
+  end
+
+  describe "GET /index" do
+    context 'ログインしていない場合' do
+      it 'ログインページへリダイレクトされる' do
+        get users_path
+        expect(response).to redirect_to login_path
+      end
+    end
+
+    context 'ログインしている場合' do
+      before do
+        @user = FactoryBot.create(:user)
+        log_in(@user)
+      end
+      
+      it 'ユーザーリストを表示する' do
+        get users_path
+        expect(response.body).to include full_title('All users')
+      end
+    end
+  end
+
+  describe 'ユーザー削除機能' do
+    before do
+      @user = FactoryBot.create(:user, admin: true)
+      @other_user = FactoryBot.create(:user, name: "Other User",
+                                             email: "otheruser@example.com" )
+    end
+
+    context 'ログインしていない場合' do
+      it 'ユーザーは削除されない' do
+        expect {
+          delete user_path(@other_user)
+        }.not_to change(User, :count)
+      end
+    end
+
+    context '管理者でないユーザーの場合' do
+      it 'ユーザーは削除されない' do
+        log_in(@other_user)
+        expect {
+          delete user_path(@other_user)
+        }.not_to change(User, :count)
+      end
+    end
+
+    context '管理者権限を持つユーザーの場合' do
+      it 'ユーザーを削除できる' do
+        log_in(@user)
+        expect {
+          delete user_path(@other_user)
+        }.to change(User, :count).by(-1)
+      end
+    end
+  end
+
 end

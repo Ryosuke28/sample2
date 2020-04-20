@@ -42,12 +42,24 @@ gem 'bootstrap-sass', '3.3.7'
 #jqueryを導入
 gem 'jquery-rails'
 
+# fakerを導入
+gem 'faker', '1.7.3'
+gem 'i18n'
+
+# will_pagenateを導入
+gem 'will_paginate', '3.1.7'
+gem 'bootstrap-will_paginate', '1.0.0'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Rspecを導入
   gem "rspec-rails"
   gem "factory_bot_rails"
+
+  # デバッガーを導入
+  gem 'pry-rails'
+  gem 'pry-byebug'
 end
 
 group :development do
