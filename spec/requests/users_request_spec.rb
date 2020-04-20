@@ -11,8 +11,6 @@ RSpec.describe "Users", type: :request do
   end
 
   describe "POST /create" do
-    include ActiveJob::TestHelper
-
     context 'パラメータが揃っている場合' do
       # 有効なユーザーデータの作成
       let(:user_params) { FactoryBot.attributes_for(:user) }
