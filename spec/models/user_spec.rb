@@ -93,4 +93,13 @@ RSpec.describe User, type: :model do
       expect(@user.authenticated?(:remember, '')).not_to be_truthy
     end
   end
+
+  describe 'userを削除したとき' do
+    it '投稿も削除される' do
+      @user.microposts.create!(content: "test post")
+      expect {
+        @user.destroy
+      }.to change(Micropost, :count).by(-1)
+    end
+  end
 end
