@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe "UsersProfiles", type: :system do
-  # pending "add some scenarios (or delete) #{__FILE__}"
   let(:user) { FactoryBot.create(:user) }
   let!(:micropost) { FactoryBot.create(:micropost, content: "first", user: user) }
   let!(:micropost_a) { FactoryBot.create(:micropost, content: "second", user: user) }
