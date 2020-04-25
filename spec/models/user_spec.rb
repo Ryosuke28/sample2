@@ -96,10 +96,54 @@ RSpec.describe User, type: :model do
 
   describe 'userを削除したとき' do
     it '投稿も削除される' do
-      @user.microposts.create!(content: "test post")
+      expect(@user.microposts.count).to eq 1
       expect {
         @user.destroy
       }.to change(Micropost, :count).by(-1)
     end
+  end
+
+  describe 'userをフォローするとき' do
+    before do
+      @other_user = FactoryBot.create(:user)
+    end
+
+    it 'userがフォロワーリストに追加される' do
+      expect(@user.following?(@other_user)).not_to be_truthy
+      @user.follow(@other_user)
+      expect(@user.following?(@other_user)).to be_truthy
+      expect(@other_user.followers.include?(@user)).to be_truthy
+      @user.unfollow(@other_user)
+      expect(@user.following?(@other_user)).not_to be_truthy
+
+    end
+  end
+
+  describe 'feed機能' do
+    before do
+      @user_a = FactoryBot.create(:user)
+      @user_b = FactoryBot.create(:user)
+
+      FactoryBot.create(:relationship, follower_id: @user.id, followed_id: @user_a.id)
+    end
+    
+    it '自分の投稿を含む' do
+      @user.microposts.each do |post_self|
+        expect(@user.feed.include?(post_self)).to be_truthy
+      end
+    end
+
+    it 'フォローしているユーザーの投稿を含む' do
+      @user_a.microposts.each do |post_following|
+        expect(@user.feed.include?(post_following)).to be_truthy
+      end
+    end
+
+    it 'フォローしていないユーザーの投稿を含まない' do
+      @user_b.microposts.each do |post_unfollowed|
+        expect(@user.feed.include?(post_unfollowed)).not_to be_truthy
+      end
+    end
+
   end
 end

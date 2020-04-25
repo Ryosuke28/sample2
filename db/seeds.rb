@@ -25,13 +25,20 @@ User.create!(name: "Example User",
                activated_at: Time.zone.now )
 end
 
+# マイクロソフト作成
 users = User.order(:created_at).take(6)
 20.times do
   content = Faker::Lorem.sentence(5)
   users.each{ |user| user.microposts.create!(content: content) }
 end
 
-
+# リレーションシップ作成
+users = User.all
+user = User.first
+following = users[2..20]
+followers = users[3..15]
+following.each { |followed| user.follow(followed) }
+followers.each { |follower| follower.follow(user) }
 
 
 

@@ -8,5 +8,9 @@ FactoryBot.define do
     admin { false }
     activated { true }
     activated_at { Time.zone.now }
+
+    after(:create) do |user|
+      FactoryBot.create(:micropost, user: user)
+    end
   end
 end

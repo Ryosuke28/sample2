@@ -166,4 +166,19 @@ RSpec.describe "Users", type: :request do
     end
   end
 
+  describe 'ユーザーフォロー機能' do
+    before do
+      @user = FactoryBot.create(:user)
+      @other_user = FactoryBot.create(:user)
+    end
+    context 'ログインしていない場合' do
+      it 'ログインページへリダイレクトされる' do
+        get following_user_path(@user)
+        expect(response).to redirect_to login_path
+        get followers_user_path(@user)
+        expect(response).to redirect_to login_path
+      end
+    end
+  end
+
 end
