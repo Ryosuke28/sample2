@@ -37,7 +37,7 @@ gem 'bcrypt', '~> 3.1.12'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 #bootstrapを導入
-gem 'bootstrap-sass', '3.3.7'
+gem 'bootstrap-sass', '3.4.1'
 
 #jqueryを導入
 gem 'jquery-rails'
