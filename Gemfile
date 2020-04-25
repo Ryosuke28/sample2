@@ -25,7 +25,7 @@ gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+gem 'bcrypt', '~> 3.1.12'
 
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
@@ -36,9 +36,30 @@ gem 'jbuilder', '~> 2.5'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
+#bootstrapを導入
+gem 'bootstrap-sass', '3.3.7'
+
+#jqueryを導入
+gem 'jquery-rails'
+
+# fakerを導入
+gem 'faker', '1.7.3'
+gem 'i18n'
+
+# will_pagenateを導入
+gem 'will_paginate', '3.1.7'
+gem 'bootstrap-will_paginate', '1.0.0'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  # Rspecを導入
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+
+  # デバッガーを導入
+  gem 'pry-rails'
+  gem 'pry-byebug'
 end
 
 group :development do
@@ -52,10 +73,14 @@ end
 
 group :test do
   # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '>= 2.15'
+  gem 'capybara'
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
-  gem 'chromedriver-helper'
+  # rspecテストで削除するように書いてあった。代わりにwebdriversを入れる
+  #gem 'chromedriver-helper'
+  gem 'webdrivers'
+  # 追加
+  gem 'rails-controller-testing'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
